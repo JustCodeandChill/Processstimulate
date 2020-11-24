@@ -6,4 +6,8 @@ public abstract class Process {
     public abstract void toTerminate();
     public abstract void toWait();
     public abstract void toBlocked();
+    public Process getProcessById(int id) {
+        if (this.processControlBlock.getId() == id) return this;
+        return null;
+    }
 }
