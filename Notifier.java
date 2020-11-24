@@ -4,26 +4,57 @@ import java.util.TimerTask;
 
 public class Notifier {
     Timer timer;
-    long endTime = System.currentTimeMillis() + 1000;
-
+    int count = 0;
+    int limit = 0;
+    int currentCount = 0;
+    int currentLimit = 0;
+    boolean switched = false; //determine context switch condition
     public Notifier() {
         timer = new Timer();
     }
 
-    public void execute(int seconds) {
-//        timer.schedule(new RemindTask(), seconds*1000); // schedule the task
-
-        while (System.currentTimeMillis() < endTime) {
-            System.out.println("Executing timer processs" + System.currentTimeMillis());
+    // Execute the timer task with task = Remind Task
+    public void toExecute(int seconds) {
+        // If being switched back, resume current context
+        if (isSwitched()) {
+            count = currentCount;
+            limit = currentLimit;
+            switched = false;
+            Utilities.print("Timer resume");
+        } else {
+            count = 0;
+            limit = seconds;
+            Utilities.print("Timer execute");
         }
-
-        Utilities.print("End of message");
+        timer.schedule(new RemindTask(), 0, 1000); // schedule the task
     }
 
+    public void toTerminate() {
+        timer.cancel();
+    }
+
+    // If process is switched out of running queue, save the current context
+    // and cancel the process
+    public void contextSwitch() {
+        Utilities.print("This timer task is onhold and being switched");
+        currentCount = count;
+        currentLimit = limit;
+        count = 0;
+        limit = 0;
+        switched = true;
+        timer.cancel();
+    }
+
+    public boolean isSwitched() {return switched;}
+
+    // Here to modify the task being looped
     class RemindTask extends TimerTask {
         public void run() {
-            System.out.println("");
-            timer.cancel(); //Terminate the timer thread
+            Utilities.print("This timer task will be called every 1 second");
+            count++;
+            if (count == limit) {
+                timer.cancel(); //Terminate the timer thread
+            }
         }
     }
 }

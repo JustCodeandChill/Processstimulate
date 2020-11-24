@@ -1,6 +1,6 @@
 package com.company;
 
-public class ProcessControlBlock implements  iProcessControlBlock{
+public class ProcessControlBlock implements iProcessControlBlock {
     private int id;
     private String state;
     private int priority;
@@ -8,11 +8,11 @@ public class ProcessControlBlock implements  iProcessControlBlock{
     private int burstTime;
 
     ProcessControlBlock() {
-        this.id=0;
-        this.state="";
-        this.priority=0;
-        this.ioInfo="";
-        this.burstTime=0;
+        this.id = 0;
+        this.state = "";
+        this.priority = 0;
+        this.ioInfo = "";
+        this.burstTime = 0;
     }
 
     public int getId() {

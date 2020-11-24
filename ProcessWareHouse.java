@@ -22,7 +22,7 @@ public class ProcessWareHouse<V> {
         try {
             this.jobQueue.add(process);
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());
             return false;
         }
@@ -63,7 +63,7 @@ public class ProcessWareHouse<V> {
         return blockQueue.contains(process);
     }
 
-// End utilities
+    // End utilities
     public boolean removeProcessFromQueue(Process process) {
         try {
             Queue<Process> currentQueue = getQueueOfCurrentProcess(process);
@@ -79,9 +79,9 @@ public class ProcessWareHouse<V> {
         try {
             currentQueue.remove(process);
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             Utilities.print("Error happended: " + e.getMessage());
-            return  false;
+            return false;
         }
     }
 
@@ -92,7 +92,7 @@ public class ProcessWareHouse<V> {
             }
             this.readyQueue.add(process);
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());
             return false;
         }
