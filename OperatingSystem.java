@@ -88,6 +88,7 @@ public class OperatingSystem {
 
     public void start() {
         this.scheduler.connectToProcessWareHouse(this.pool);
+        this.pool.connectToDispatcher(this.dispatcher);
         Utilities.printHeadLine("start scheduler");
         this.scheduler.start();
         Utilities.print("print queue");
@@ -95,6 +96,7 @@ public class OperatingSystem {
         Utilities.printHeadLine("start dispatcher");
         Utilities.print("Connect dispatcher");
         this.dispatcher.connectToScheduler(this.scheduler);
+        this.dispatcher.connectToProcessWareHouse(this.pool);
 
         while (!this.pool.readyQueue.isEmpty()) {
             this.dispatcher.start();

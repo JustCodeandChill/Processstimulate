@@ -6,6 +6,7 @@ public class Scheduler {
     Queue<Integer> priorityQueue;
     Map<Integer, Integer> idAndBurstTimeMap;
     ProcessWareHouse processWareHouse;
+    Dispatcher dispatcher;
 
     public Scheduler() {
         this.priorityQueue = new LinkedList<Integer>();
@@ -30,13 +31,19 @@ public class Scheduler {
     }
 
     // for return process from scheduler
+    // take a process from priority Q, take it out of ready Q
     public Process getProcess() {
-        int id = priorityQueue.poll();
-        Process process = searchProcessById(id);
-        if (process != null)
-            return process;
-        else
+        if (priorityQueue.size() > 0) {
+            int id = priorityQueue.poll();
+            Process process = searchProcessById(id);
+            if (process != null) {
+                return process;
+            } else
+                return null;
+        } else {
+            Utilities.print("Priority Queue is empty");
             return null;
+        }
     }
     // end
 

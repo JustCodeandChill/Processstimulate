@@ -9,6 +9,7 @@ public class ProcessWareHouse<V> {
     Queue<Process> waitQueue;
     Queue<Process> blockQueue;
     Queue<Process> terminateQueue;
+    Dispatcher dispatcher;
 
     public ProcessWareHouse() {
         this.jobQueue = new LinkedList<>();
@@ -16,6 +17,13 @@ public class ProcessWareHouse<V> {
         this.waitQueue = new LinkedList<>();
         this.blockQueue = new LinkedList<>();
         this.terminateQueue = new LinkedList<>();
+    }
+    public void connectToDispatcher(Dispatcher dispatcher) {
+        try {
+            this.dispatcher = dispatcher;
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+        }
     }
 
     public boolean addProcessToJobQueue(Process process) {
