@@ -1,56 +1,77 @@
 package com.company;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class Scheduler {
     Queue<Integer> priorityQueue;
-    Map<Integer,Integer> idAndBurstTimeMap;
+    Map<Integer, Integer> idAndBurstTimeMap;
 
-    public Scheduler(Queue priorityQueue) {
+    public Scheduler() {
         this.priorityQueue = new LinkedList();
         this.idAndBurstTimeMap = new HashMap();
     }
 
-    public boolean addProcess(Process process) {
-        //based on burst time, predict priority
 
-
-        // if the highest, put it in the first
-
-        // if the lowest put in the last
-
-        return true;
-    }
-
-    public void addProcessToMap(Process process) {
+    public boolean addProcessToMap(Process process) {
         try {
-            if (Utilities.isValidProcess(process))
+            if (Utilities.isValidProcess(process)) {
                 idAndBurstTimeMap.put(process.processControlBlock.getId(), process.processControlBlock.getBurstTime());
-            else
+                return true;
+            } else {
                 Utilities.printErr("Cannot add to map");
-        }catch (Exception e) {
+                return false;
+            }
+        } catch (Exception e) {
             Utilities.printErr(e.getMessage());
+            return false;
         }
     }
 
-    public void removeProcessFromMap(Process process) {
+    public boolean removeProcessFromMap(Process process) {
         try {
             int id = process.processControlBlock.getId();
             if (idAndBurstTimeMap.containsKey(id))
                 idAndBurstTimeMap.remove(id);
-        }catch (Exception e) {
+            return true;
+        } catch (Exception e) {
             Utilities.printErr(e.getMessage());
+            return false;
         }
     }
 
     public boolean addProcessToPriorityQueue(Process process) {
         try {
-
-        }catch (Exception e){
-
+            if (Utilities.isValidProcess(process)) {
+                priorityQueue.offer(process.processControlBlock.getId());
+            }
+            return true;
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+            return false;
         }
+    }
+
+    public boolean addProcessIdToPriorityQueue(int id) {
+        try {
+            priorityQueue.offer(id);
+            return true;
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Integer> getSortedProcessListByBurstTime() {
+        List<Integer> processByBurstTime = new ArrayList<>(idAndBurstTimeMap.values());
+        Collections.sort(processByBurstTime);
+        return processByBurstTime;
+    }
+
+    public boolean createPriorityQueue(List<Integer> processIdList) {
+        for (int id : processIdList) {
+            if (!addProcessIdToPriorityQueue(id))
+                return false;
+        }
+        return true;
     }
 }

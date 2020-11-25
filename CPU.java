@@ -4,19 +4,20 @@ public class CPU {
     Process currentProcess;
 
     public CPU() {
+        this.currentProcess = null;
     }
 
     public Process getCurrentProcess() {
         return currentProcess;
     }
 
-    public void setCurrentProcess(Process currentProcess) {
-        this.currentProcess = currentProcess;
-        Utilities.print("Process id: " + currentProcess.processControlBlock.getId()
-                + " is set to the CPU to execute");
+    public void setCurrentProcess(Process process) {
+        this.currentProcess = process;
+        Utilities.print("CPU get a new process - " + "process id: " + currentProcess.processControlBlock.getId());
     }
 
     public void toExecute() {
+        Utilities.print("CPU is executing " + "process id: " + currentProcess.processControlBlock.getId());
         this.currentProcess.toExecute();
     }
 
