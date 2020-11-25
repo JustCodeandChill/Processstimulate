@@ -43,6 +43,7 @@ public class OperatingSystem {
         isExecutingAProcess = true;
         cpu.setCurrentProcess(process);
         cpu.toExecute();
+        isExecutingAProcess = false;
     }
 
     public ProcessWareHouse getPool() {
@@ -86,8 +87,13 @@ public class OperatingSystem {
     }
 
     public void start() {
-        if (!this.pool.readyQueue.isEmpty()) {
-            this.executeAProcess();
-        }
+        this.scheduler.connectToProcessWareHouse(this.pool);
+        Utilities.print("start scheduler");
+        this.scheduler.start();
+        Utilities.print("print queue");
+        this.scheduler.printPriorityQueue();
+//        while (!this.pool.readyQueue.isEmpty()) {
+//            this.executeAProcess();
+//        }
     }
 }

@@ -7,5 +7,5 @@ public class Utilities {
     static void printErr(String message)  {
         System.out.println("Error happened: " + message);
     }
-    static boolean isValidProcess(Process process) {return process.processControlBlock.getId() < 0;}
+    static boolean isValidProcess(Process process) {return process.processControlBlock.getId() > 0;}
 }
