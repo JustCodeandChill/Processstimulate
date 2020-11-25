@@ -14,7 +14,7 @@ public class Main {
         ProcessControlBlock pcb1 = new ProcessControlBlock();
         pcb1.setId(100);
         pcb1.setPriority(6);
-        Process time = new TimerProcess(pcb1, 2);
+        Process time = new CalculateProcess(pcb1);
         ProcessControlBlock pcb2 = new ProcessControlBlock();
         pcb2.setId(2);
         pcb2.setPriority(1);

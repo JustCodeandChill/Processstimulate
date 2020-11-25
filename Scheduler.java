@@ -1,11 +1,6 @@
 package com.company;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Collections.reverseOrder;
-import static java.util.Collections.sort;
 
 public class Scheduler {
     Queue<Integer> priorityQueue;
@@ -13,7 +8,7 @@ public class Scheduler {
     ProcessWareHouse processWareHouse;
 
     public Scheduler() {
-        this.priorityQueue = new LinkedList();
+        this.priorityQueue = new LinkedList<Integer>();
         this.idAndBurstTimeMap = new HashMap<Integer, Integer>();
     }
 
@@ -37,15 +32,16 @@ public class Scheduler {
     // for return process from scheduler
     public Process getProcess() {
         int id = priorityQueue.poll();
-        if (searchProcessById(id) != null)
-            return searchProcessById(id);
+        Process process = searchProcessById(id);
+        if (process != null)
+            return process;
         else
             return null;
     }
     // end
 
     public Process searchProcessById(int id) {
-        Iterator<Process> itr = this.processWareHouse.jobQueue.iterator();
+        Iterator<Process> itr = this.processWareHouse.readyQueue.iterator();
 
         while (itr.hasNext()) {
             Process currentProcess = itr.next();

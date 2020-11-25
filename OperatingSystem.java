@@ -25,7 +25,7 @@ public class OperatingSystem {
     // new process will be added to job pool then move to ready queue
     public void addNewProcess(Process process) {
         try {
-            Utilities.print("A new process is created in the OS");
+            Utilities.printHeadLine("A new process is created in the OS");
             this.pool.addProcessToJobQueue(process);
             this.pool.removeMostCurrentProcessFromJobQueue();
             this.pool.addProcessToReadyQueue(process);
@@ -88,12 +88,16 @@ public class OperatingSystem {
 
     public void start() {
         this.scheduler.connectToProcessWareHouse(this.pool);
-        Utilities.print("start scheduler");
+        Utilities.printHeadLine("start scheduler");
         this.scheduler.start();
         Utilities.print("print queue");
         this.scheduler.printPriorityQueue();
-//        while (!this.pool.readyQueue.isEmpty()) {
-//            this.executeAProcess();
-//        }
+        Utilities.printHeadLine("start dispatcher");
+        Utilities.print("Connect dispatcher");
+        this.dispatcher.connectToScheduler(this.scheduler);
+
+        while (!this.pool.readyQueue.isEmpty()) {
+            this.dispatcher.start();
+        }
     }
 }

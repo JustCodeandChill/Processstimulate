@@ -33,6 +33,7 @@ public class ProcessWareHouse<V> {
         try {
             Utilities.print("Add most current process to ready queue");
             this.readyQueue.add(process);
+            Utilities.printBreakLine();
             return true;
         } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());

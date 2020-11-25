@@ -7,5 +7,11 @@ public class Utilities {
     static void printErr(String message)  {
         System.out.println("Error happened: " + message);
     }
+    static void printHeadLine(String message)  {
+        System.out.println("--------" + message + "--------");
+    }
+    static void printBreakLine()  {
+        System.out.println("------------------------");
+    }
     static boolean isValidProcess(Process process) {return process.processControlBlock.getId() > 0;}
 }
