@@ -23,6 +23,13 @@ public class Scheduler {
         }
     }
 
+    public void connectToDispatcher(Dispatcher dispatcher) {
+        try {
+            this.dispatcher = dispatcher;
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+        }
+    }
     //end
 
     public void start() {
@@ -65,22 +72,12 @@ public class Scheduler {
         }
     }
 
-//    public boolean removeProcessFromMap(Process process) {
-//        try {
-//            int id = process.processControlBlock.getId();
-//            if (idAndBurstTimeMap.containsKey(id))
-//                idAndBurstTimeMap.remove(id);
-//            return true;
-//        } catch (Exception e) {
-//            Utilities.printErr(e.getMessage());
-//            return false;
-//        }
-//    }
-
 
     public boolean addProcessToMap(Process process) {
         try {
-            if (Utilities.isValidProcess(process)) {
+            if (process.processControlBlock.getId() > 0) {
+                this.dispatcher.changeStateToNew(process);
+                this.dispatcher.changeStateToReady(process);
                 idAndBurstTimeMap.put(process.processControlBlock.getId(),
                         process.processControlBlock.getPriority());
                 return true;

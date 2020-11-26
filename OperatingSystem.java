@@ -6,6 +6,7 @@ public class OperatingSystem {
     Dispatcher dispatcher;
     CPU cpu;
     boolean isExecutingAProcess;
+    public static String method = "PQ";
 
     public OperatingSystem() {
         this.pool = new ProcessWareHouse();
@@ -88,6 +89,7 @@ public class OperatingSystem {
 
     public void start() {
         this.scheduler.connectToProcessWareHouse(this.pool);
+        this.scheduler.connectToDispatcher(this.dispatcher);
         this.pool.connectToDispatcher(this.dispatcher);
         Utilities.printHeadLine("start scheduler");
         this.scheduler.start();

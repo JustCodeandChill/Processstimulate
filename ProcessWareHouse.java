@@ -5,7 +5,12 @@ import java.util.LinkedList;
 
 public class ProcessWareHouse<V> {
     Queue<Process> jobQueue;
+    // use readyQue in roundrobin
     Queue<Process> readyQueue;
+
+    //use LinkedQueue in priorityQ
+    LinkedList<Process> readyQueueInLinkedList;
+
     Queue<Process> waitQueue;
     Queue<Process> blockQueue;
     Queue<Process> terminateQueue;
@@ -17,7 +22,10 @@ public class ProcessWareHouse<V> {
         this.waitQueue = new LinkedList<>();
         this.blockQueue = new LinkedList<>();
         this.terminateQueue = new LinkedList<>();
+        this.readyQueueInLinkedList = new LinkedList<>();
+        Utilities.print("" + OperatingSystem.method);
     }
+
     public void connectToDispatcher(Dispatcher dispatcher) {
         try {
             this.dispatcher = dispatcher;
@@ -26,22 +34,11 @@ public class ProcessWareHouse<V> {
         }
     }
 
+    // Job queue functionalities
     public boolean addProcessToJobQueue(Process process) {
         try {
             Utilities.print("Add most current process to job queue");
             this.jobQueue.add(process);
-            return true;
-        } catch (Exception e) {
-            Utilities.print("Error happenned: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean addProcessToReadyQueue(Process process) {
-        try {
-            Utilities.print("Add most current process to ready queue");
-            this.readyQueue.add(process);
-            Utilities.printBreakLine();
             return true;
         } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());
@@ -62,16 +59,37 @@ public class ProcessWareHouse<V> {
             return null;
         }
     }
+    // End job queue functionality
+
+    // Prioriy Queue implementation
+
+
+    // Priority Queue implementation
+
+    //Round robin implementation
+    public boolean addProcessToReadyQueue(Process process) {
+        try {
+            Utilities.print("Add most current process to ready queue");
+            this.readyQueue.add(process);
+            Utilities.printBreakLine();
+            return true;
+        } catch (Exception e) {
+            Utilities.print("Error happenned: " + e.getMessage());
+            return false;
+        }
+    }
 
     public Process removeMostCurrentProcessFromReadyQueue() {
-            Utilities.print("Remove most current process from ready queue");
-            if (!isQueueEmpty(readyQueue)) {
-                Process process = this.readyQueue.poll();
-                return process;
-            } else {
-                return null;
-            }
+        Utilities.print("Remove most current process from ready queue");
+        if (!isQueueEmpty(readyQueue)) {
+            Process process = this.readyQueue.poll();
+            Utilities.print("The poll off process is id " + process.processControlBlock.getId());
+            return process;
+        } else {
+            return null;
+        }
     }
+    // End of round robin implementation
 
     // Utilities to check the existence of a process in system
     public boolean isProcessInWareHouse(Process process) {
@@ -111,8 +129,8 @@ public class ProcessWareHouse<V> {
     public boolean isQueueEmpty(Queue queue) {
         return queue.isEmpty();
     }
-
     // End utilities
+
 //    public boolean removeProcessFromQueue(Process process) {
 //        try {
 //            Queue<Process> currentQueue = getQueueOfCurrentProcess(process);

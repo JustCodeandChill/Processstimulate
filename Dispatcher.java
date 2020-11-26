@@ -5,12 +5,15 @@ public class Dispatcher {
     Scheduler scheduler;
     ProcessWareHouse processWareHouse;
     CPU cpu;
+    String method;
 
     public Dispatcher() {
         //dispatcher feed process directly to cpu and force it to execute current process
         this.cpu = new CPU();
+        this.method = OperatingSystem.method;
     }
 
+    //main functionality
     public void start() {
         Process process = this.getProcessFromScheduler();
         //change state of this process to execute;
@@ -26,6 +29,7 @@ public class Dispatcher {
         changeStateToCompleted(process);
     }
 
+    // end main functionality
     public void connectToScheduler(Scheduler scheduler) {
         try {
             this.scheduler = scheduler;
@@ -49,11 +53,23 @@ public class Dispatcher {
     }
 
     // Change state functionality
+    public void changeStateToNew(Process process) {
+        try {
+            process.processControlBlock.setState("New");
+            Utilities.printHeadLine("Change the process with id " +
+                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
+            process.processControlBlock.getState();
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+        }
+    }
+
     public void changeStateToRun(Process process) {
         try {
-            Utilities.print("Change the process with id " +
-                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
             process.processControlBlock.setState("Run");
+            Utilities.printHeadLine("Change the process with id " +
+                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
+            process.processControlBlock.getState();
         } catch (Exception e) {
             Utilities.printErr(e.getMessage());
         }
@@ -61,9 +77,10 @@ public class Dispatcher {
 
     public void changeStateToReady(Process process) {
         try {
-            Utilities.print("Change the process with id " +
-                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
             process.processControlBlock.setState("Ready");
+            Utilities.printHeadLine("Change the process with id " +
+                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
+            process.processControlBlock.getState();
         } catch (Exception e) {
             Utilities.printErr(e.getMessage());
         }
@@ -71,9 +88,10 @@ public class Dispatcher {
 
     public void changeStateToCompleted(Process process) {
         try {
-            Utilities.print("Change the process with id " +
-                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
             process.processControlBlock.setState("Completed");
+            Utilities.printHeadLine("Change the process with id " +
+                    process.processControlBlock.getId() + " to state " + process.processControlBlock.getState());
+            process.processControlBlock.getState();
         } catch (Exception e) {
             Utilities.printErr(e.getMessage());
         }

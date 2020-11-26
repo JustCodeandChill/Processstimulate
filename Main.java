@@ -10,11 +10,11 @@ public class Main {
 //        cpu.toExecute();
 
         OperatingSystem os = new OperatingSystem();
-        //create a process
-//        ProcessControlBlock pcb1 = new ProcessControlBlock();
-//        pcb1.setId(100);
-//        pcb1.setPriority(6);
-//        Process time = new CalculateProcess(pcb1);
+//        create a process
+        ProcessControlBlock pcb1 = new ProcessControlBlock();
+        pcb1.setId(100);
+        pcb1.setPriority(6);
+        Process time = new CalculateProcess(pcb1);
 
         ProcessControlBlock pcb2 = new ProcessControlBlock();
         pcb2.setId(2);
@@ -27,7 +27,7 @@ public class Main {
 //        Process time3 = new TimerProcess(pcb3, 2);
 
         // add it to the os
-//        os.addNewProcess(time);
+        os.addNewProcess(time);
         os.addNewProcess(time2);
 //        os.addNewProcess(time3);
         os.start();

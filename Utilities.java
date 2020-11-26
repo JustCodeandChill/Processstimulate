@@ -14,4 +14,6 @@ public class Utilities {
         System.out.println("------------------------");
     }
     static boolean isValidProcess(Process process) {return process.processControlBlock.getId() > 0;}
+
+    static boolean isPriorityQueueMethod() {return  OperatingSystem.method.equals("PQ");}
 }

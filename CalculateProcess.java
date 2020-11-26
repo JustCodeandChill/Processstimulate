@@ -1,7 +1,7 @@
 package com.company;
 
 public class CalculateProcess extends Process {
-    ProcessControlBlock processControlBlock;
+//    ProcessControlBlock processControlBlock;
 
     public CalculateProcess(ProcessControlBlock processControlBlock) {
         this.processControlBlock = processControlBlock;
