@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.LinkedList;
 
@@ -15,6 +17,8 @@ public class ProcessWareHouse<V> {
     Queue<Process> blockQueue;
     Queue<Process> terminateQueue;
     Dispatcher dispatcher;
+    // OS
+    OperatingSystem osController;
 
     public ProcessWareHouse() {
         this.jobQueue = new LinkedList<>();
@@ -23,6 +27,7 @@ public class ProcessWareHouse<V> {
         this.blockQueue = new LinkedList<>();
         this.terminateQueue = new LinkedList<>();
         this.readyQueueInLinkedList = new LinkedList<>();
+        this.osController = new OperatingSystem();
         Utilities.print("" + Utilities.getMethod());
     }
 
@@ -33,6 +38,14 @@ public class ProcessWareHouse<V> {
             Utilities.printErr(e.getMessage());
         }
     }
+
+//  Based on the method PQ or RR, the data structure will be different
+    public Collection<Process> getReadyQueue() {
+        if (OperatingSystem.isRoundRobinMethod()) return readyQueue;
+        if (OperatingSystem.isPriorityQueueMethod()) return readyQueueInLinkedList;
+        return null;
+    }
+//  End
 
     // Job queue functionalities
     public boolean addProcessToJobQueue(Process process) {
@@ -62,20 +75,39 @@ public class ProcessWareHouse<V> {
     // End job queue functionality
 
     // Prioriy Queue implementation
+    public void addProcessToReadyQueueInLinkedList(Process process) {
+        try {
+            Utilities.print("In PWH: Add most current process to ready queue linked list");
+            this.readyQueueInLinkedList.add(process);
+            this.osController.changeProcessStateToReady(process);
+            Utilities.printBreakLine();
+        } catch (Exception e) {
+            Utilities.print("Error happenned: " + e.getMessage());
+        }
+    }
 
+    public void removeProcessFromReadyQueueInLinkedListById(int id) {
+        try {
+            if (id <= 0) throw new IllegalArgumentException("Invalid id");
+            Process process = searchProcessById(id);
+            this.readyQueueInLinkedList.remove(process);
+            Utilities.print("In PWH: remove a process with id: " + id + " out of Ready Queue.");
+        } catch (Exception e) {
+            Utilities.print("Error happenned: " + e.getMessage());
+        }
+    }
 
-    // Priority Queue implementation
+    // End Priority Queue implementation
+
 
     //Round robin implementation
-    public boolean addProcessToReadyQueue(Process process) {
+    public void addProcessToReadyQueue(Process process) {
         try {
             Utilities.print("Add most current process to ready queue");
             this.readyQueue.add(process);
             Utilities.printBreakLine();
-            return true;
         } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());
-            return false;
         }
     }
 
@@ -91,7 +123,20 @@ public class ProcessWareHouse<V> {
     }
     // End of round robin implementation
 
-    // Utilities to check the existence of a process in system
+//     Utilities
+//    To use in readyQueueLinkedList
+    public Process searchProcessById(int id) {
+        Iterator<Process> itr = this.readyQueueInLinkedList.iterator();
+
+        while (itr.hasNext()) {
+            Process currentProcess = itr.next();
+            int currentId = currentProcess.processControlBlock.getId();
+            if (currentId == id) return currentProcess;
+        }
+        return null;
+    }
+
+//    to check the existence of a process in system
     public boolean isProcessInWareHouse(Process process) {
         return (isInJobQueue(process) || isInReadyQueue(process) || isInBlockQueue(process)
                 || isInTerminateQueue(process) || isInWaitQueue(process));

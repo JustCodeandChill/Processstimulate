@@ -10,26 +10,35 @@ public class Dispatcher {
     public Dispatcher() {
         //dispatcher feed process directly to cpu and force it to execute current process
         this.cpu = new CPU();
-        this.method = OperatingSystem.method;
+        this.method = OperatingSystem.getMethod();
     }
 
     //main functionality
     public void start() {
+        if (OperatingSystem.isPriorityQueueMethod()) {
+            startWithPriorityQueueMethod();
+        }
+    }
+
+    public void startWithPriorityQueueMethod() {
         Process process = this.getProcessFromScheduler();
-        //change state of this process to execute;
+//        change state of this process to execute;
+//        this one need to be changed, the data stucute is not correct for priority queue
+
         this.processWareHouse.removeMostCurrentProcessFromReadyQueue();
-        //move this to exit state
+        //move this to ready state
         Utilities.print("process id: " + process.processControlBlock.getId() +
                 "- priority" + process.processControlBlock.getPriority());
-        // execute the process
+        //move to run state and execute the process
         changeStateToRun(process);
         this.cpu.setCurrentProcess(process);
         this.cpu.toExecute();
         // move process to completed
         changeStateToCompleted(process);
     }
-
     // end main functionality
+
+    // connect with other component
     public void connectToScheduler(Scheduler scheduler) {
         try {
             this.scheduler = scheduler;
@@ -49,8 +58,8 @@ public class Dispatcher {
     public Process getProcessFromScheduler() {
         Process process = scheduler.getProcess();
         return process;
-
     }
+    // end of connection function
 
     // Change state functionality
     public void changeStateToNew(Process process) {

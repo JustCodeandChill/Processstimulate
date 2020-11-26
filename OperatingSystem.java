@@ -25,9 +25,12 @@ public class OperatingSystem {
 
     // main functionality
     public void start() {
+        //connect every piece together
         this.scheduler.connectToProcessWareHouse(this.pool);
         this.scheduler.connectToDispatcher(this.dispatcher);
         this.pool.connectToDispatcher(this.dispatcher);
+
+        // scheduler will pick a process, based on the method
         Utilities.printHeadLine("start scheduler");
         this.scheduler.start();
         Utilities.print("print queue");
@@ -56,8 +59,14 @@ public class OperatingSystem {
     // end of main functionalities
 
     // Utilities
+    static boolean isPriorityQueueMethod() {return  OperatingSystem.method.equals("PQ");}
+
+    static boolean isRoundRobinMethod() {return  OperatingSystem.method.equals("RR");}
+
+    static String getMethod() {return OperatingSystem.method;}
+
     public boolean isIsExecutingAProcess() {return isExecutingAProcess;}
-    
+
     public ProcessWareHouse getPool() {
         return pool;
     }
@@ -98,5 +107,8 @@ public class OperatingSystem {
         isExecutingAProcess = executingAProcess;
     }
 
-
+    //Actions
+    public void changeProcessStateToReady(Process process) {
+        this.dispatcher.changeStateToReady(process);
+    }
 }

@@ -28,7 +28,7 @@ public class Main {
 
         // add it to the os
         os.addNewProcess(time);
-        os.addNewProcess(time2);
+//        os.addNewProcess(time2);
 //        os.addNewProcess(time3);
         os.start();
     }

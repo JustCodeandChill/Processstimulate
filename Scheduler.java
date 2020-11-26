@@ -40,9 +40,21 @@ public class Scheduler {
     // for return process from scheduler
     // take a process from priority Q, take it out of ready Q
     public Process getProcess() {
+//        depend on the method, if PQ then pull the id out of PQ, search for that process, execute that process and erase that process
+//        if RR, just pull the most current process, execute a while and put it back
+
+        if (OperatingSystem.isPriorityQueueMethod()) {
+            Process process = getProcessIfPriorityQueueMethod();
+            return process;
+        }
+
+        return null;
+    }
+
+    public Process getProcessIfPriorityQueueMethod() {
         if (priorityQueue.size() > 0) {
             int id = priorityQueue.poll();
-            Process process = searchProcessById(id);
+            Process process = this.processWareHouse.searchProcessById(id);
             if (process != null) {
                 return process;
             } else
@@ -54,16 +66,18 @@ public class Scheduler {
     }
     // end
 
-    public Process searchProcessById(int id) {
-        Iterator<Process> itr = this.processWareHouse.readyQueue.iterator();
-
-        while (itr.hasNext()) {
-            Process currentProcess = itr.next();
-            int currentId = currentProcess.processControlBlock.getId();
-            if (currentId == id) return currentProcess;
-        }
-        return null;
-    }
+//    public Process searchProcessById(int id) {
+//        Collection readyQueue = processWareHouse.getReadyQueue();
+//
+//        Iterator<Process> itr = readyQueue.iterator();
+//
+//        while (itr.hasNext()) {
+//            Process currentProcess = itr.next();
+//            int currentId = currentProcess.processControlBlock.getId();
+//            if (currentId == id) return currentProcess;
+//        }
+//        return null;
+//    }
 
     // create the hashmap to later on feed to priority queue
     public void createIdAndBurstTimeMap() {
