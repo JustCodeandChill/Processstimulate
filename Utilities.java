@@ -16,4 +16,6 @@ public class Utilities {
     static boolean isValidProcess(Process process) {return process.processControlBlock.getId() > 0;}
 
     static boolean isPriorityQueueMethod() {return  OperatingSystem.method.equals("PQ");}
+    static boolean isRoundRobinMethod() {return  OperatingSystem.method.equals("RR");}
+    static String getMethod() {return OperatingSystem.method;}
 }

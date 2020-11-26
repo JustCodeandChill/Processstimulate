@@ -5,7 +5,7 @@ public class OperatingSystem {
     Scheduler scheduler;
     Dispatcher dispatcher;
     CPU cpu;
-    boolean isExecutingAProcess;
+    public static boolean isExecutingAProcess;
     public static String method = "PQ";
 
     public OperatingSystem() {
@@ -23,6 +23,25 @@ public class OperatingSystem {
         this.cpu = cpu;
     }
 
+    // main functionality
+    public void start() {
+        this.scheduler.connectToProcessWareHouse(this.pool);
+        this.scheduler.connectToDispatcher(this.dispatcher);
+        this.pool.connectToDispatcher(this.dispatcher);
+        Utilities.printHeadLine("start scheduler");
+        this.scheduler.start();
+        Utilities.print("print queue");
+        this.scheduler.printPriorityQueue();
+        Utilities.printHeadLine("start dispatcher");
+        Utilities.print("Connect dispatcher");
+        this.dispatcher.connectToScheduler(this.scheduler);
+        this.dispatcher.connectToProcessWareHouse(this.pool);
+
+        while (!this.pool.readyQueue.isEmpty()) {
+            this.dispatcher.start();
+        }
+    }
+
     // new process will be added to job pool then move to ready queue
     public void addNewProcess(Process process) {
         try {
@@ -34,19 +53,11 @@ public class OperatingSystem {
             Utilities.printErr(e.getMessage());
         }
     }
+    // end of main functionalities
 
-    public void executeAProcess() {
-        // getProcess is connected with warehouse removeMostCurrentProcessFromReadyQueue
-//        Process process = scheduler.getProcess();
-//        dispatcher.allocateCPU(process);
-
-        Process process = this.pool.removeMostCurrentProcessFromReadyQueue();
-        isExecutingAProcess = true;
-        cpu.setCurrentProcess(process);
-        cpu.toExecute();
-        isExecutingAProcess = false;
-    }
-
+    // Utilities
+    public boolean isIsExecutingAProcess() {return isExecutingAProcess;}
+    
     public ProcessWareHouse getPool() {
         return pool;
     }
@@ -87,21 +98,5 @@ public class OperatingSystem {
         isExecutingAProcess = executingAProcess;
     }
 
-    public void start() {
-        this.scheduler.connectToProcessWareHouse(this.pool);
-        this.scheduler.connectToDispatcher(this.dispatcher);
-        this.pool.connectToDispatcher(this.dispatcher);
-        Utilities.printHeadLine("start scheduler");
-        this.scheduler.start();
-        Utilities.print("print queue");
-        this.scheduler.printPriorityQueue();
-        Utilities.printHeadLine("start dispatcher");
-        Utilities.print("Connect dispatcher");
-        this.dispatcher.connectToScheduler(this.scheduler);
-        this.dispatcher.connectToProcessWareHouse(this.pool);
 
-        while (!this.pool.readyQueue.isEmpty()) {
-            this.dispatcher.start();
-        }
-    }
 }

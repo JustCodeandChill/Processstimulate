@@ -23,7 +23,7 @@ public class ProcessWareHouse<V> {
         this.blockQueue = new LinkedList<>();
         this.terminateQueue = new LinkedList<>();
         this.readyQueueInLinkedList = new LinkedList<>();
-        Utilities.print("" + OperatingSystem.method);
+        Utilities.print("" + Utilities.getMethod());
     }
 
     public void connectToDispatcher(Dispatcher dispatcher) {
