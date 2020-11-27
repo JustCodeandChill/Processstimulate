@@ -16,15 +16,15 @@ public class Main {
         pcb1.setPriority(6);
         Process time = new CalculateProcess(pcb1);
 
-        ProcessControlBlock pcb2 = new ProcessControlBlock();
-        pcb2.setId(2);
-        pcb2.setPriority(1);
-        Process time2 = new CalculateProcess(pcb2);
-
 //        ProcessControlBlock pcb2 = new ProcessControlBlock();
 //        pcb2.setId(2);
 //        pcb2.setPriority(1);
-//        Process time2 = new TimerProcess(pcb2, 2);
+//        Process time2 = new CalculateProcess(pcb2);
+
+        ProcessControlBlock pcb2 = new ProcessControlBlock();
+        pcb2.setId(2);
+        pcb2.setPriority(10);
+        Process time2 = new TimerProcess(pcb2, 2);
 //
 //        ProcessControlBlock pcb3 = new ProcessControlBlock();
 //        pcb3.setId(3);

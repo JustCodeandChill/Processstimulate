@@ -53,6 +53,7 @@ public class Notifier {
             Utilities.print("This timer task will be called every 1 second");
             count++;
             if (count == limit) {
+                OperatingSystem.setIsExecutingAProcess(false);
                 timer.cancel(); //Terminate the timer thread
             }
         }

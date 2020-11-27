@@ -8,7 +8,26 @@ public class OperatingSystem {
     Dispatcher dispatcher;
     CPU cpu;
     public boolean allWorksAreDone;
+
+    public static boolean isExecutingAProcess() {
+        return isExecutingAProcess;
+    }
+
+    public static void setIsExecutingAProcess(boolean isExecutingAProcess) {
+        OperatingSystem.isExecutingAProcess = isExecutingAProcess;
+    }
+
     public static boolean isExecutingAProcess;
+
+    public static int getIdCurrentExecutingProcess() {
+        return idCurrentExecutingProcess;
+    }
+
+    public static void setIdCurrentExecutingProcess(int idCurrentExecutingProcess) {
+        OperatingSystem.idCurrentExecutingProcess = idCurrentExecutingProcess;
+    }
+
+    public static int idCurrentExecutingProcess;
     public static String method = "PQ";
 
 
@@ -17,7 +36,7 @@ public class OperatingSystem {
         this.scheduler = new Scheduler(this);
         this.dispatcher = new Dispatcher(this);
         this.cpu = new CPU();
-        this.isExecutingAProcess = false;
+        this.idCurrentExecutingProcess = -1;
         this.allWorksAreDone = false;
     }
 
@@ -88,7 +107,6 @@ public class OperatingSystem {
 
     static String getMethod() {return OperatingSystem.method;}
 
-    public boolean isIsExecutingAProcess() {return isExecutingAProcess;}
 
     public ProcessWareHouse getPool() {
         return pool;
@@ -120,14 +138,6 @@ public class OperatingSystem {
 
     public void setCpu(CPU cpu) {
         this.cpu = cpu;
-    }
-
-    public boolean isExecutingAProcess() {
-        return isExecutingAProcess;
-    }
-
-    public void setExecutingAProcess(boolean executingAProcess) {
-        isExecutingAProcess = executingAProcess;
     }
 
     //Actions
