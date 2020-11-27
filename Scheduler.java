@@ -7,10 +7,12 @@ public class Scheduler {
     Map<Integer, Integer> idAndBurstTimeMap;
     ProcessWareHouse processWareHouse;
     Dispatcher dispatcher;
+    OperatingSystem osController;
 
-    public Scheduler() {
+    public Scheduler(OperatingSystem osController) {
         this.priorityQueue = new LinkedList<Integer>();
         this.idAndBurstTimeMap = new HashMap<Integer, Integer>();
+        this.osController = osController;
     }
 
 
@@ -45,6 +47,7 @@ public class Scheduler {
 
         if (OperatingSystem.isPriorityQueueMethod()) {
             Process process = getProcessIfPriorityQueueMethod();
+            Utilities.printSubLine("The retrieved process id: " + process.processControlBlock.getId());
             return process;
         }
 
@@ -61,6 +64,7 @@ public class Scheduler {
                 return null;
         } else {
             Utilities.print("Priority Queue is empty");
+            osController.allWorksAreDone();
             return null;
         }
     }
@@ -81,17 +85,18 @@ public class Scheduler {
 
     // create the hashmap to later on feed to priority queue
     public void createIdAndBurstTimeMap() {
-        for (Object process : this.processWareHouse.readyQueue) {
+        Collection readyQueue = this.processWareHouse.getReadyQueue();
+        for (Object process : readyQueue) {
             addProcessToMap((Process) process);
         }
+        Utilities.printSubLine("In Scheduler: Create HashMap for PQ");
+        printHashMap();
     }
 
 
     public boolean addProcessToMap(Process process) {
         try {
             if (process.processControlBlock.getId() > 0) {
-                this.dispatcher.changeStateToNew(process);
-                this.dispatcher.changeStateToReady(process);
                 idAndBurstTimeMap.put(process.processControlBlock.getId(),
                         process.processControlBlock.getPriority());
                 return true;
@@ -121,8 +126,17 @@ public class Scheduler {
 
     //
     public void printPriorityQueue() {
-        for (int id : this.priorityQueue) {
+         for (int id : priorityQueue) {
             Utilities.print("The process id is: " + id);
+        }
+    }
+
+    public void printHashMap() {
+        Iterator itr = idAndBurstTimeMap.entrySet().iterator();
+
+        while (itr.hasNext()) {
+            Map.Entry element = (Map.Entry) itr.next();
+            Utilities.print("id: " + element.getKey() + " Priority: " + element.getValue());
         }
     }
 }

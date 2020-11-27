@@ -19,7 +19,12 @@ public class Main {
         ProcessControlBlock pcb2 = new ProcessControlBlock();
         pcb2.setId(2);
         pcb2.setPriority(1);
-        Process time2 = new TimerProcess(pcb2, 2);
+        Process time2 = new CalculateProcess(pcb2);
+
+//        ProcessControlBlock pcb2 = new ProcessControlBlock();
+//        pcb2.setId(2);
+//        pcb2.setPriority(1);
+//        Process time2 = new TimerProcess(pcb2, 2);
 //
 //        ProcessControlBlock pcb3 = new ProcessControlBlock();
 //        pcb3.setId(3);
@@ -28,7 +33,7 @@ public class Main {
 
         // add it to the os
         os.addNewProcess(time);
-//        os.addNewProcess(time2);
+        os.addNewProcess(time2);
 //        os.addNewProcess(time3);
         os.start();
     }

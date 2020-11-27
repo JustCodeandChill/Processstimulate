@@ -1,15 +1,19 @@
 package com.company;
 
+import javax.management.OperationsException;
+
 // will take a process from scheduler and change state and assign to cpu
 public class Dispatcher {
     Scheduler scheduler;
     ProcessWareHouse processWareHouse;
     CPU cpu;
     String method;
+    OperatingSystem osController;
 
-    public Dispatcher() {
+    public Dispatcher(OperatingSystem osController) {
         //dispatcher feed process directly to cpu and force it to execute current process
         this.cpu = new CPU();
+        this.osController = osController;
         this.method = OperatingSystem.getMethod();
     }
 
@@ -21,20 +25,25 @@ public class Dispatcher {
     }
 
     public void startWithPriorityQueueMethod() {
-        Process process = this.getProcessFromScheduler();
+        try {
+            Process process = this.getProcessFromScheduler();
 //        change state of this process to execute;
 //        this one need to be changed, the data stucute is not correct for priority queue
+//            this.processWareHouse.removeMostCurrentProcessFromReadyQueue();
+            this.processWareHouse.removeProcessFromReadyQueueInLinkedListById(process.processControlBlock.getId());
+            //move this to ready state
+            Utilities.print("process id: " + process.processControlBlock.getId() +
+                    "- priority" + process.processControlBlock.getPriority());
+            //move to run state and execute the process
+            changeStateToRun(process);
+            this.cpu.setCurrentProcess(process);
+            this.cpu.toExecute();
+            // move process to completed
+            changeStateToCompleted(process);
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+        }
 
-        this.processWareHouse.removeMostCurrentProcessFromReadyQueue();
-        //move this to ready state
-        Utilities.print("process id: " + process.processControlBlock.getId() +
-                "- priority" + process.processControlBlock.getPriority());
-        //move to run state and execute the process
-        changeStateToRun(process);
-        this.cpu.setCurrentProcess(process);
-        this.cpu.toExecute();
-        // move process to completed
-        changeStateToCompleted(process);
     }
     // end main functionality
 

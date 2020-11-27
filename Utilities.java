@@ -10,6 +10,9 @@ public class Utilities {
     static void printHeadLine(String message)  {
         System.out.println("--------" + message + "--------");
     }
+    static void printSubLine(String message)  {
+        System.out.println("---" + message);
+    }
     static void printBreakLine()  {
         System.out.println("------------------------");
     }

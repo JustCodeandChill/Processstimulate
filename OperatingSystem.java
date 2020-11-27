@@ -1,19 +1,24 @@
 package com.company;
 
+import java.util.Collection;
+
 public class OperatingSystem {
     ProcessWareHouse pool;
     Scheduler scheduler;
     Dispatcher dispatcher;
     CPU cpu;
+    public boolean allWorksAreDone;
     public static boolean isExecutingAProcess;
     public static String method = "PQ";
 
+
     public OperatingSystem() {
-        this.pool = new ProcessWareHouse();
-        this.scheduler = new Scheduler();
-        this.dispatcher = new Dispatcher();
+        this.pool = new ProcessWareHouse(this);
+        this.scheduler = new Scheduler(this);
+        this.dispatcher = new Dispatcher(this);
         this.cpu = new CPU();
         this.isExecutingAProcess = false;
+        this.allWorksAreDone = false;
     }
 
     public OperatingSystem(ProcessWareHouse pool, Scheduler scheduler, Dispatcher dispatcher, CPU cpu) {
@@ -23,9 +28,17 @@ public class OperatingSystem {
         this.cpu = cpu;
     }
 
+    public OperatingSystem getOSController() {
+        return this;
+    }
+
+    public void allWorksAreDone() {
+        allWorksAreDone = true;
+    }
+
     // main functionality
     public void start() {
-        //connect every piece together
+        //connect every instances together
         this.scheduler.connectToProcessWareHouse(this.pool);
         this.scheduler.connectToDispatcher(this.dispatcher);
         this.pool.connectToDispatcher(this.dispatcher);
@@ -36,11 +49,16 @@ public class OperatingSystem {
         Utilities.print("print queue");
         this.scheduler.printPriorityQueue();
         Utilities.printHeadLine("start dispatcher");
-        Utilities.print("Connect dispatcher");
+        Utilities.printHeadLine("Connect dispatcher");
         this.dispatcher.connectToScheduler(this.scheduler);
         this.dispatcher.connectToProcessWareHouse(this.pool);
 
-        while (!this.pool.readyQueue.isEmpty()) {
+        Collection readyQueue = this.pool.getReadyQueue();
+        while (!readyQueue.isEmpty()) {
+            if (allWorksAreDone) {
+                Utilities.printHeadLine("All over");
+                return;
+            }
             this.dispatcher.start();
         }
     }
@@ -49,9 +67,14 @@ public class OperatingSystem {
     public void addNewProcess(Process process) {
         try {
             Utilities.printHeadLine("A new process is created in the OS");
-            this.pool.addProcessToJobQueue(process);
-            this.pool.removeMostCurrentProcessFromJobQueue();
-            this.pool.addProcessToReadyQueue(process);
+            if (isPriorityQueueMethod()) {
+                this.pool.addProcessToJobQueue(process);
+                this.pool.removeMostCurrentProcessFromJobQueue();
+                this.pool.addProcessToReadyQueue(process);
+            }
+
+//            this.pool.removeMostCurrentProcessFromJobQueue();
+//            this.pool.addProcessToReadyQueue(process);
         }catch (Exception e) {
             Utilities.printErr(e.getMessage());
         }

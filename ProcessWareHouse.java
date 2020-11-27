@@ -20,14 +20,14 @@ public class ProcessWareHouse<V> {
     // OS
     OperatingSystem osController;
 
-    public ProcessWareHouse() {
+    public ProcessWareHouse(OperatingSystem os) {
         this.jobQueue = new LinkedList<>();
         this.readyQueue = new LinkedList<>();
         this.waitQueue = new LinkedList<>();
         this.blockQueue = new LinkedList<>();
         this.terminateQueue = new LinkedList<>();
         this.readyQueueInLinkedList = new LinkedList<>();
-        this.osController = new OperatingSystem();
+        this.osController = os;
         Utilities.print("" + Utilities.getMethod());
     }
 
@@ -41,10 +41,13 @@ public class ProcessWareHouse<V> {
 
 //  Based on the method PQ or RR, the data structure will be different
     public Collection<Process> getReadyQueue() {
-        if (OperatingSystem.isRoundRobinMethod()) return readyQueue;
-        if (OperatingSystem.isPriorityQueueMethod()) return readyQueueInLinkedList;
+        if (OperatingSystem.isPriorityQueueMethod()) { return getReadyQueueIfPriorityQueue(); }
+        if (OperatingSystem.isRoundRobinMethod()) { return getReadyQueueIfRoundRobin(); }
         return null;
     }
+    public Queue<Process> getReadyQueueIfRoundRobin() { return this.readyQueue; }
+
+    public LinkedList<Process> getReadyQueueIfPriorityQueue() { return this.readyQueueInLinkedList; }
 //  End
 
     // Job queue functionalities
@@ -104,7 +107,12 @@ public class ProcessWareHouse<V> {
     public void addProcessToReadyQueue(Process process) {
         try {
             Utilities.print("Add most current process to ready queue");
-            this.readyQueue.add(process);
+            if (OperatingSystem.isPriorityQueueMethod()) {
+                this.readyQueueInLinkedList.add(process);
+            }
+            else if (OperatingSystem.isRoundRobinMethod()) {
+                this.readyQueue.add(process);
+            }
             Utilities.printBreakLine();
         } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());
@@ -112,14 +120,24 @@ public class ProcessWareHouse<V> {
     }
 
     public Process removeMostCurrentProcessFromReadyQueue() {
-        Utilities.print("Remove most current process from ready queue");
-        if (!isQueueEmpty(readyQueue)) {
-            Process process = this.readyQueue.poll();
-            Utilities.print("The poll off process is id " + process.processControlBlock.getId());
-            return process;
-        } else {
-            return null;
+
+//        if (OperatingSystem.isPriorityQueueMethod()) {
+//            if (!isQueueEmpty(readyQueueInLinkedList)) {
+//                Utilities.print("Remove most current process from ready queue linkedlist");
+//                Process process = searchProcessById(id);
+//                Utilities.print("The poll off process is id " + process.processControlBlock.getId());
+//                return process;
+//            }
+//        }
+         if (OperatingSystem.isRoundRobinMethod()) {
+            if (!isQueueEmpty(readyQueue)) {
+                Utilities.print("Remove most current process from ready queue");
+                Process process = this.readyQueue.poll();
+                Utilities.print("The poll off process is id " + process.processControlBlock.getId());
+                return process;
+            }
         }
+        return null;
     }
     // End of round robin implementation
 
