@@ -22,6 +22,10 @@ public class Dispatcher {
         if (OperatingSystem.isPriorityQueueMethod()) {
             startWithPriorityQueueMethod();
         }
+
+        if (OperatingSystem.isRoundRobinMethod()) {
+            startWithRoundRobinMethod();
+        }
     }
 
     public void startWithPriorityQueueMethod() {
@@ -49,6 +53,9 @@ public class Dispatcher {
         } catch (Exception e) {
             Utilities.printErr(e.getMessage());
         }
+    }
+
+    public void startWithRoundRobinMethod() {
 
     }
     // end main functionality
