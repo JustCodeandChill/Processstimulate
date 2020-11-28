@@ -80,10 +80,12 @@ public class ProcessWareHouse<V> {
     // Prioriy Queue implementation
     public void addProcessToReadyQueueInLinkedList(Process process) {
         try {
+
             Utilities.print("In PWH: Add most current process to ready queue linked list");
             this.readyQueueInLinkedList.add(process);
             this.osController.changeProcessStateToReady(process);
             Utilities.printBreakLine();
+
         } catch (Exception e) {
             Utilities.print("Error happenned: " + e.getMessage());
         }
@@ -107,6 +109,7 @@ public class ProcessWareHouse<V> {
     public void addProcessToReadyQueue(Process process) {
         try {
             Utilities.print("Add most current process to ready queue");
+            osController.changeProcessStateToReady(process);
             if (OperatingSystem.isPriorityQueueMethod()) {
                 this.readyQueueInLinkedList.add(process);
             }

@@ -14,12 +14,14 @@ public class CalculateProcess extends Process {
                 + " is being executed");
         Utilities.print("The matrix derivation is 42");
         Utilities.print("The matrix abatros is 190");
+        this.toTerminate();
     }
 
     @Override
     public void toTerminate() {
         Utilities.print("Calcualte process id:" + this.processControlBlock.getId()
                 + " is terminated");
+        OperatingSystem.setIsExecutingAProcess(false);
     }
 
     @Override
