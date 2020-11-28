@@ -35,8 +35,11 @@ public class Scheduler {
     //end
 
     public void start() {
-        createIdAndBurstTimeMap();
-        createPriorityQueueFromMap();
+        if (OperatingSystem.isPriorityQueueMethod()) {
+            createIdAndBurstTimeMap();
+            createPriorityQueueFromMap();
+        }
+
     }
 
     // for return process from scheduler
@@ -47,10 +50,15 @@ public class Scheduler {
 
         if (OperatingSystem.isPriorityQueueMethod()) {
             Process process = getProcessIfPriorityQueueMethod();
-            Utilities.printSubLine("The retrieved process id: " + process.processControlBlock.getId());
+            Utilities.printSubLine("In scheduler: The retrieved process id: " + process.processControlBlock.getId());
             return process;
         }
 
+        if (OperatingSystem.isRoundRobinMethod()) {
+            Process process = getProcessIfRoundRobinMethod();
+            Utilities.printSubLine("In scheduler: The retrieved process id: " + process.processControlBlock.getId());
+            return process;
+        }
         return null;
     }
 
@@ -64,9 +72,23 @@ public class Scheduler {
                 return null;
         } else {
             Utilities.print("Priority Queue is empty");
-            osController.allWorksAreDone();
+//            osController.allWorksAreDone();
             return null;
         }
+    }
+
+    public Process getProcessIfRoundRobinMethod() {
+        Process process = null;
+        try {
+            if (this.processWareHouse.isQueueEmpty(this.processWareHouse.readyQueue)) {
+                Utilities.print("The ready queue is empty");
+                return null;
+            }
+            process = this.processWareHouse.getMostCurrentProcessFromReadyQueue();
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+        }
+        return process;
     }
     // end
 

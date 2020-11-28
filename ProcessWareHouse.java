@@ -10,12 +10,12 @@ public class ProcessWareHouse<V> {
     // use readyQue in roundrobin
     Queue<Process> readyQueue;
 
-    //use LinkedQueue in priorityQ
+    //use readyQueueInLinkedList in priorityQ
     LinkedList<Process> readyQueueInLinkedList;
 
     Queue<Process> waitQueue;
     Queue<Process> blockQueue;
-    Queue<Process> terminateQueue;
+
     Dispatcher dispatcher;
     // OS
     OperatingSystem osController;
@@ -25,7 +25,6 @@ public class ProcessWareHouse<V> {
         this.readyQueue = new LinkedList<>();
         this.waitQueue = new LinkedList<>();
         this.blockQueue = new LinkedList<>();
-        this.terminateQueue = new LinkedList<>();
         this.readyQueueInLinkedList = new LinkedList<>();
         this.osController = os;
         Utilities.print("" + Utilities.getMethod());
@@ -53,6 +52,7 @@ public class ProcessWareHouse<V> {
     // Job queue functionalities
     public boolean addProcessToJobQueue(Process process) {
         try {
+            Utilities.printSubLine("In process ware house(PWH): ");
             Utilities.print("Add most current process to job queue");
             this.jobQueue.add(process);
             return true;
@@ -77,7 +77,7 @@ public class ProcessWareHouse<V> {
     }
     // End job queue functionality
 
-    // Prioriy Queue implementation
+    // Priority Queue implementation
     public void addProcessToReadyQueueInLinkedList(Process process) {
         try {
 
@@ -91,6 +91,7 @@ public class ProcessWareHouse<V> {
         }
     }
 
+    // move from ready queue to execution
     public void removeProcessFromReadyQueueInLinkedListById(int id) {
         try {
             if (id <= 0) throw new IllegalArgumentException("Invalid id");
@@ -105,16 +106,18 @@ public class ProcessWareHouse<V> {
     // End Priority Queue implementation
 
 
-    //Round robin implementation
+    // main functions
     public void addProcessToReadyQueue(Process process) {
         try {
-            Utilities.print("Add most current process to ready queue");
+            Utilities.print("In PWH: Add most current process to ready queue");
             osController.changeProcessStateToReady(process);
             if (OperatingSystem.isPriorityQueueMethod()) {
-                this.readyQueueInLinkedList.add(process);
+                this.addProcessToReadyQueueInLinkedList(process);
             }
+
             else if (OperatingSystem.isRoundRobinMethod()) {
-                this.readyQueue.add(process);
+                Utilities.print("In PWH: Add most current process to ready queue in Round RObin");
+                this.moveCurrentProcessToTheEndOfReadyQueue(process);
             }
             Utilities.printBreakLine();
         } catch (Exception e) {
@@ -122,19 +125,12 @@ public class ProcessWareHouse<V> {
         }
     }
 
-    public Process removeMostCurrentProcessFromReadyQueue() {
-
-//        if (OperatingSystem.isPriorityQueueMethod()) {
-//            if (!isQueueEmpty(readyQueueInLinkedList)) {
-//                Utilities.print("Remove most current process from ready queue linkedlist");
-//                Process process = searchProcessById(id);
-//                Utilities.print("The poll off process is id " + process.processControlBlock.getId());
-//                return process;
-//            }
-//        }
-         if (OperatingSystem.isRoundRobinMethod()) {
+    //Round robin implementation
+    //get the most current process
+    public Process getMostCurrentProcessFromReadyQueue() {
+        if (OperatingSystem.isRoundRobinMethod()) {
             if (!isQueueEmpty(readyQueue)) {
-                Utilities.print("Remove most current process from ready queue");
+                Utilities.print("In PWH: Remove most current process from ready queue");
                 Process process = this.readyQueue.poll();
                 Utilities.print("The poll off process is id " + process.processControlBlock.getId());
                 return process;
@@ -142,6 +138,18 @@ public class ProcessWareHouse<V> {
         }
         return null;
     }
+    // execute it in some quantum time
+    // if still has burst time then return the process to the end of ready Queue
+    public void moveCurrentProcessToTheEndOfReadyQueue(Process process) {
+        try {
+            if (!Utilities.isValidProcess(process)) throw new IllegalArgumentException("The process is not valid");
+            Utilities.print("In PWH: Move the process id: " + process.processControlBlock.getId()+" to the end of ready queue");
+            this.readyQueue.add(process);
+        } catch (Exception e) {
+            Utilities.printErr(e.getMessage());
+        }
+    }
+
     // End of round robin implementation
 
 //     Utilities
@@ -160,7 +168,7 @@ public class ProcessWareHouse<V> {
 //    to check the existence of a process in system
     public boolean isProcessInWareHouse(Process process) {
         return (isInJobQueue(process) || isInReadyQueue(process) || isInBlockQueue(process)
-                || isInTerminateQueue(process) || isInWaitQueue(process));
+                ||  isInWaitQueue(process));
     }
 
     public Queue<Process> getQueueOfCurrentProcess(Process process) {
@@ -168,7 +176,6 @@ public class ProcessWareHouse<V> {
         if (isInWaitQueue(process)) return waitQueue;
         if (isInJobQueue(process)) return jobQueue;
         if (isInBlockQueue(process)) return blockQueue;
-        if (isInTerminateQueue(process)) return terminateQueue;
         return null;
     }
 
@@ -184,9 +191,6 @@ public class ProcessWareHouse<V> {
         return waitQueue.contains(process);
     }
 
-    public boolean isInTerminateQueue(Process process) {
-        return terminateQueue.contains(process);
-    }
 
     public boolean isInBlockQueue(Process process) {
         return blockQueue.contains(process);
@@ -196,40 +200,4 @@ public class ProcessWareHouse<V> {
         return queue.isEmpty();
     }
     // End utilities
-
-//    public boolean removeProcessFromQueue(Process process) {
-//        try {
-//            Queue<Process> currentQueue = getQueueOfCurrentProcess(process);
-//            removeProcess(currentQueue, process);
-//            return true;
-//        } catch (Exception e) {
-//            Utilities.print("Error happended: " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    public boolean removeProcess(Queue<Process> currentQueue, Process process) {
-//        try {
-//            currentQueue.remove(process);
-//            return true;
-//        } catch (Exception e) {
-//            Utilities.print("Error happended: " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    public boolean moveProcessToReadyQueue(Process process) {
-//        try {
-//            if (isProcessInWareHouse(process)) {
-//                removeProcessFromQueue(process);
-//            }
-//            this.readyQueue.add(process);
-//            return true;
-//        } catch (Exception e) {
-//            Utilities.print("Error happenned: " + e.getMessage());
-//            return false;
-//        }
-//    }
-
-
 }

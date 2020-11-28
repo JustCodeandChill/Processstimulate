@@ -28,7 +28,12 @@ public class OperatingSystem {
     }
 
     public static int idCurrentExecutingProcess;
-    public static String method = "PQ";
+
+    public static void setMethod(String method) {
+        OperatingSystem.method = method;
+    }
+
+    public static String method = "RR";
 
 
     public OperatingSystem() {
@@ -36,8 +41,6 @@ public class OperatingSystem {
         this.scheduler = new Scheduler(this);
         this.dispatcher = new Dispatcher(this);
         this.cpu = new CPU();
-        this.idCurrentExecutingProcess = -1;
-        this.allWorksAreDone = false;
     }
 
     public OperatingSystem(ProcessWareHouse pool, Scheduler scheduler, Dispatcher dispatcher, CPU cpu) {
@@ -74,10 +77,10 @@ public class OperatingSystem {
 
         Collection readyQueue = this.pool.getReadyQueue();
         while (!readyQueue.isEmpty()) {
-            if (allWorksAreDone) {
-                Utilities.printHeadLine("All over");
-                return;
-            }
+//            if (allWorksAreDone) {
+//                Utilities.printHeadLine("All over");
+//                return;
+//            }
             this.dispatcher.start();
         }
     }
@@ -92,8 +95,11 @@ public class OperatingSystem {
                 this.pool.addProcessToReadyQueue(process);
             }
 
-//            this.pool.removeMostCurrentProcessFromJobQueue();
-//            this.pool.addProcessToReadyQueue(process);
+            if (isRoundRobinMethod()) {
+                this.pool.addProcessToJobQueue(process);
+                this.pool.removeMostCurrentProcessFromJobQueue();
+                this.pool.addProcessToReadyQueue(process);
+            }
         }catch (Exception e) {
             Utilities.printErr(e.getMessage());
         }

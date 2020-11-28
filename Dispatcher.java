@@ -9,12 +9,14 @@ public class Dispatcher {
     CPU cpu;
     String method;
     OperatingSystem osController;
+    static int timeQuantum; // Equal 1 by default
 
     public Dispatcher(OperatingSystem osController) {
         //dispatcher feed process directly to cpu and force it to execute current process
         this.cpu = new CPU();
         this.osController = osController;
         this.method = OperatingSystem.getMethod();
+        timeQuantum = 1;
     }
 
     //main functionality
@@ -32,7 +34,7 @@ public class Dispatcher {
         try {
             if (!OperatingSystem.isExecutingAProcess()) {
                 Process process = this.getProcessFromScheduler();
-                OperatingSystem.setIsExecutingAProcess(true);
+//                OperatingSystem.setIsExecutingAProcess(true);
     //        change state of this process to execute;
     //        this one need to be changed, the data stucute is not correct for priority queue
 //            this.processWareHouse.removeMostCurrentProcessFromReadyQueue();
@@ -56,7 +58,18 @@ public class Dispatcher {
     }
 
     public void startWithRoundRobinMethod() {
-
+            Process process = this.getProcessFromScheduler();
+            Utilities.print("In Dispatcher: process id: " + process.processControlBlock.getId() +
+                    "- total time needed to finish: " + process.processControlBlock.getBurstTime());
+            changeStateToRun(process);
+            this.cpu.setCurrentProcess(process);
+            this.cpu.toExecute();
+            Utilities.printBreakLine();
+            if (process.processControlBlock.getBurstTime() > 0) {
+                this.processWareHouse.moveCurrentProcessToTheEndOfReadyQueue(process);
+            } else {
+                changeStateToCompleted(process);
+            }
     }
     // end main functionality
 
