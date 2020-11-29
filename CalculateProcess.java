@@ -1,4 +1,5 @@
 package com.company;
+import java.lang.Math;
 
 public class CalculateProcess extends Process {
 //    ProcessControlBlock processControlBlock;
@@ -15,8 +16,10 @@ public class CalculateProcess extends Process {
         if (OperatingSystem.isPriorityQueueMethod()) {
             Utilities.print("Calcualte process id:" + this.processControlBlock.getId()
                     + " is being executed");
-            Utilities.print("The matrix derivation is 42");
-            Utilities.print("The matrix abacus is 190");
+
+
+            Utilities.print("The matrix derivation is " + generateRandNum());
+            Utilities.print("The matrix abacus is " + generateRandNum());
             this.toTerminate();
         }
 
@@ -25,9 +28,8 @@ public class CalculateProcess extends Process {
                     + " is being executed for " + Dispatcher.timeQuantum + " time quantum.");
             int newBurstTime = this.processControlBlock.getBurstTime() - 1;
             if  (newBurstTime <= 0) {
-                Utilities.print("The matrix derivation is 42");
-                Utilities.print("The matrix abatros is 190");
-                this.isFinished = true;
+                Utilities.print("The matrix derivation is " + generateRandNum());
+                Utilities.print("The matrix abacus is " + generateRandNum());
                 this.toTerminate();
             }
             this.processControlBlock.setBurstTime(newBurstTime);
@@ -49,5 +51,13 @@ public class CalculateProcess extends Process {
     @Override
     public void toBlocked() {
 
+    }
+
+    public int generateRandNum() {
+        int max = 100;
+        int min = 1;
+        int range = max - min + 1;
+
+        return (int)(Math.random() * range) + min;
     }
 }

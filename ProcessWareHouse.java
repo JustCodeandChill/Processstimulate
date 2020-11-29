@@ -83,7 +83,6 @@ public class ProcessWareHouse<V> {
 
             Utilities.print("In PWH: Add most current process to ready queue linked list");
             this.readyQueueInLinkedList.add(process);
-            this.osController.changeProcessStateToReady(process);
             Utilities.printBreakLine();
 
         } catch (Exception e) {
@@ -138,7 +137,6 @@ public class ProcessWareHouse<V> {
         }
         return null;
     }
-    // execute it in some quantum time
     // if still has burst time then return the process to the end of ready Queue
     public void moveCurrentProcessToTheEndOfReadyQueue(Process process) {
         try {
@@ -198,6 +196,17 @@ public class ProcessWareHouse<V> {
 
     public boolean isQueueEmpty(Queue queue) {
         return queue.isEmpty();
+    }
+    
+    public void printQueue() {
+        Iterator<Process> itr = readyQueue.iterator();
+
+        // hasNext() returns true if the queue has more elements
+        while (itr.hasNext())
+        {
+            // next() returns the next element in the iteration
+            System.out.println(itr.next());
+        }
     }
     // End utilities
 }

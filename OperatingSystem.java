@@ -7,7 +7,17 @@ public class OperatingSystem {
     Scheduler scheduler;
     Dispatcher dispatcher;
     CPU cpu;
+
+    public boolean isAllWorksAreDone() {
+        return allWorksAreDone;
+    }
+
+    public void setAllWorksAreDone(boolean allWorksAreDone) {
+        this.allWorksAreDone = allWorksAreDone;
+    }
+
     public boolean allWorksAreDone;
+    public static String method ;
 
     public static boolean isExecutingAProcess() {
         return isExecutingAProcess;
@@ -32,9 +42,6 @@ public class OperatingSystem {
     public static void setMethod(String method) {
         OperatingSystem.method = method;
     }
-
-    public static String method = "RR";
-
 
     public OperatingSystem() {
         this.pool = new ProcessWareHouse(this);
@@ -61,34 +68,43 @@ public class OperatingSystem {
     // main functionality
     public void start() {
         //connect every instances together
-        this.scheduler.connectToProcessWareHouse(this.pool);
-        this.scheduler.connectToDispatcher(this.dispatcher);
+        Utilities.printHeadLine("PWH: ");
+        Utilities.printSubLine("Connect PWH with dispatcher");
         this.pool.connectToDispatcher(this.dispatcher);
+
+        Utilities.printHeadLine("Scheduler: ");
+        Utilities.printSubLine("Connect scheduler with PWH");
+        this.scheduler.connectToProcessWareHouse(this.pool);
+        Utilities.printSubLine("Connect scheduler with dispatcher");
+        this.scheduler.connectToDispatcher(this.dispatcher);
 
         // scheduler will pick a process, based on the method
         Utilities.printHeadLine("start scheduler");
         this.scheduler.start();
         Utilities.print("print queue");
         this.scheduler.printPriorityQueue();
-        Utilities.printHeadLine("start dispatcher");
-        Utilities.printHeadLine("Connect dispatcher");
+
+        Utilities.printHeadLine("Dispatcher: ");
+        Utilities.printSubLine("Connect dispatcher with scheduler");
         this.dispatcher.connectToScheduler(this.scheduler);
+        Utilities.printSubLine("Connect dispatcher with PWH");
         this.dispatcher.connectToProcessWareHouse(this.pool);
 
         Collection readyQueue = this.pool.getReadyQueue();
+
         while (!readyQueue.isEmpty()) {
-//            if (allWorksAreDone) {
-//                Utilities.printHeadLine("All over");
-//                return;
-//            }
             this.dispatcher.start();
         }
+        if (allWorksAreDone) Utilities.printHeadLine("All work are done");
+        else Utilities.printHeadLine("Not done");
     }
 
     // new process will be added to job pool then move to ready queue
     public void addNewProcess(Process process) {
         try {
             Utilities.printHeadLine("A new process is created in the OS");
+            //Os talk to the process ware house
+            this.dispatcher.changeStateToNew(process);
             if (isPriorityQueueMethod()) {
                 this.pool.addProcessToJobQueue(process);
                 this.pool.removeMostCurrentProcessFromJobQueue();

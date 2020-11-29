@@ -36,14 +36,20 @@ public class Scheduler {
 
     public void start() {
         if (OperatingSystem.isPriorityQueueMethod()) {
+//            HashMap (key:id - value:priority) to keep history of all the processes that had been added either ready or terminated
+//            From HashMap create the priority queue of Ids based on the process priority
             createIdAndBurstTimeMap();
             createPriorityQueueFromMap();
         }
 
+        if (OperatingSystem.isRoundRobinMethod()) {
+//             No need to create additional data structure since the process is poll off from ready Queue
+//            from ProcessWareHouse
+            return;
+        }
     }
 
-    // for return process from scheduler
-    // take a process from priority Q, take it out of ready Q
+//     take a process from priority Q, take it out of ready Q
     public Process getProcess() {
 //        depend on the method, if PQ then pull the id out of PQ, search for that process, execute that process and erase that process
 //        if RR, just pull the most current process, execute a while and put it back
@@ -64,15 +70,15 @@ public class Scheduler {
 
     public Process getProcessIfPriorityQueueMethod() {
         if (priorityQueue.size() > 0) {
-            int id = priorityQueue.poll();
+            int id = priorityQueue.remove();
             Process process = this.processWareHouse.searchProcessById(id);
             if (process != null) {
                 return process;
-            } else
+            } else {
                 return null;
+            }
         } else {
             Utilities.print("Priority Queue is empty");
-//            osController.allWorksAreDone();
             return null;
         }
     }
@@ -92,18 +98,6 @@ public class Scheduler {
     }
     // end
 
-//    public Process searchProcessById(int id) {
-//        Collection readyQueue = processWareHouse.getReadyQueue();
-//
-//        Iterator<Process> itr = readyQueue.iterator();
-//
-//        while (itr.hasNext()) {
-//            Process currentProcess = itr.next();
-//            int currentId = currentProcess.processControlBlock.getId();
-//            if (currentId == id) return currentProcess;
-//        }
-//        return null;
-//    }
 
     // create the hashmap to later on feed to priority queue
     public void createIdAndBurstTimeMap() {
@@ -118,7 +112,9 @@ public class Scheduler {
 
     public boolean addProcessToMap(Process process) {
         try {
-            if (process.processControlBlock.getId() > 0) {
+            // Very crucial condition check to seperate the 2 thread
+            // If specify same properties, one thread can know and change data of another thread
+            if (process.processControlBlock.getId() > 0 || process.processControlBlock.getPriority() != 0) {
                 idAndBurstTimeMap.put(process.processControlBlock.getId(),
                         process.processControlBlock.getPriority());
                 return true;

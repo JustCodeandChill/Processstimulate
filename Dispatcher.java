@@ -34,22 +34,24 @@ public class Dispatcher {
         try {
             if (!OperatingSystem.isExecutingAProcess()) {
                 Process process = this.getProcessFromScheduler();
-//                OperatingSystem.setIsExecutingAProcess(true);
-    //        change state of this process to execute;
-    //        this one need to be changed, the data stucute is not correct for priority queue
-//            this.processWareHouse.removeMostCurrentProcessFromReadyQueue();
                 this.processWareHouse.removeProcessFromReadyQueueInLinkedListById(process.processControlBlock.getId());
                 //move this to ready state
                 Utilities.print("In Dispatcher: process id: " + process.processControlBlock.getId() +
                         "- priority: " + process.processControlBlock.getPriority());
+
                 //move to run state and execute the process
                 changeStateToRun(process);
                 OperatingSystem.setIsExecutingAProcess(true);
                 this.cpu.setCurrentProcess(process);
                 this.cpu.toExecute();
+
                 // move process to completed
-            if (!OperatingSystem.isExecutingAProcess())
-                changeStateToCompleted(process);
+                if (!OperatingSystem.isExecutingAProcess())
+                    changeStateToCompleted(process);
+
+                if (processWareHouse.isQueueEmpty(processWareHouse.readyQueue)) {
+                    osController.setAllWorksAreDone(true);
+                }
             }
 
         } catch (Exception e) {
@@ -70,7 +72,12 @@ public class Dispatcher {
             } else {
                 changeStateToCompleted(process);
             }
+            this.processWareHouse.printQueue();
+            if (processWareHouse.isQueueEmpty(processWareHouse.readyQueue)) {
+                osController.setAllWorksAreDone(true);
+            }
     }
+
     // end main functionality
 
     // connect with other component
@@ -92,6 +99,7 @@ public class Dispatcher {
 
     public Process getProcessFromScheduler() {
         Process process = scheduler.getProcess();
+        if (process == null) osController.setAllWorksAreDone(true);
         return process;
     }
     // end of connection function
