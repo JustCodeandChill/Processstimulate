@@ -68,11 +68,12 @@ public class Dispatcher {
             this.cpu.toExecute();
             Utilities.printBreakLine();
             if (process.processControlBlock.getBurstTime() > 0) {
+                osController.changeProcessStateToReady(process);
                 this.processWareHouse.moveCurrentProcessToTheEndOfReadyQueue(process);
             } else {
                 changeStateToCompleted(process);
             }
-            this.processWareHouse.printQueue();
+
             if (processWareHouse.isQueueEmpty(processWareHouse.readyQueue)) {
                 osController.setAllWorksAreDone(true);
             }

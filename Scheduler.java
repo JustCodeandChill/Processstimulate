@@ -45,6 +45,7 @@ public class Scheduler {
         if (OperatingSystem.isRoundRobinMethod()) {
 //             No need to create additional data structure since the process is poll off from ready Queue
 //            from ProcessWareHouse
+            Utilities.printSubLine("In Scheduler: The process is picked from the Ready Queue");
             return;
         }
     }
@@ -71,12 +72,7 @@ public class Scheduler {
     public Process getProcessIfPriorityQueueMethod() {
         if (priorityQueue.size() > 0) {
             int id = priorityQueue.remove();
-            Process process = this.processWareHouse.searchProcessById(id);
-            if (process != null) {
-                return process;
-            } else {
-                return null;
-            }
+            return this.processWareHouse.searchProcessById(id);
         } else {
             Utilities.print("Priority Queue is empty");
             return null;
@@ -98,8 +94,8 @@ public class Scheduler {
     }
     // end
 
-
-    // create the hashmap to later on feed to priority queue
+//  Priority scheduling algorithm related functions
+//  create the hashmap to later on feed to priority queue
     public void createIdAndBurstTimeMap() {
         Collection readyQueue = this.processWareHouse.getReadyQueue();
         for (Object process : readyQueue) {
@@ -112,7 +108,7 @@ public class Scheduler {
 
     public boolean addProcessToMap(Process process) {
         try {
-            // Very crucial condition check to seperate the 2 thread
+            // Very crucial condition check to separate the 2 thread
             // If specify same properties, one thread can know and change data of another thread
             if (process.processControlBlock.getId() > 0 || process.processControlBlock.getPriority() != 0) {
                 idAndBurstTimeMap.put(process.processControlBlock.getId(),
@@ -128,7 +124,7 @@ public class Scheduler {
         }
     }
 
-    // Priority scheduling algorithm
+
     public void createPriorityQueueFromMap() {
         LinkedHashMap<Integer, Integer> sortedMap = new LinkedHashMap<>();
 
@@ -142,7 +138,7 @@ public class Scheduler {
         }
     }
 
-    //
+    // Printing methods
     public void printPriorityQueue() {
          for (int id : priorityQueue) {
             Utilities.print("The process id is: " + id);

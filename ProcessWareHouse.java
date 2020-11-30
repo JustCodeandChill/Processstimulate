@@ -27,7 +27,7 @@ public class ProcessWareHouse<V> {
         this.blockQueue = new LinkedList<>();
         this.readyQueueInLinkedList = new LinkedList<>();
         this.osController = os;
-        Utilities.print("" + Utilities.getMethod());
+
     }
 
     public void connectToDispatcher(Dispatcher dispatcher) {

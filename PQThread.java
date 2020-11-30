@@ -13,9 +13,6 @@ public class PQThread implements Runnable{
         try {
             Utilities.printHeadLine("Start the OS");
             OperatingSystem os = new OperatingSystem();
-
-//        Change the method here
-//        OperatingSystem.setMethod("PQ");
             OperatingSystem.setMethod("PQ");
 
 //        create a process
@@ -31,17 +28,10 @@ public class PQThread implements Runnable{
 //            pcb2.setBurstTime(3);
             Process time2 = new CalculateProcess(pcb2);
 
-//        ProcessControlBlock pcb3 = new ProcessControlBlock();
-//        pcb3.setId(3);
-//        pcb3.setPriority(100);
-//        pcb3.setBurstTime(3);
-//        Process time3 = new TimerProcess(pcb3, 2);
 
 //        add it to the os
             os.addNewProcess(time);
             os.addNewProcess(time2);
-//        os.addNewProcess(time3);
-//        os.addNewProcess(time3);
             os.start();
         } catch (Exception e) {
             Utilities.printErr(e.getMessage());
