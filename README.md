@@ -1,5 +1,15 @@
 # Processstimulate
-Problem statement: 
+## Prequiste 
+Java environment. You can download the JDK at https://www.oracle.com/java/technologies/javase-downloads.html
+Your Favorite Java IDE. Recommended using Eclipse at https://www.eclipse.org/downloads/
+
+## Installing
+To get this project set up on your machine, please clone the project or download it as .ZIP file at https://github.com/JustCodeandChill/Processstimulate.git  
+
+## Running
+Open the src folder with your Java IDE and run the "Main.java" file
+
+## Problem statement: 
 Simulate the following process of the kernel of an O.S :
 - Dispatching, scheduling transitioning
 - Dispatching following a round robin technique and priority
@@ -20,3 +30,6 @@ There are 4 main components in this stimulation namely ProcessWareHouse (in Proc
 
 ## Datagram
 ![image](https://user-images.githubusercontent.com/43172690/109396038-45e6b400-78f5-11eb-9273-a80f2946de05.png)
+
+## Author
+Bao Tran
